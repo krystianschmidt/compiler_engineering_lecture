@@ -130,9 +130,13 @@ public class Scanner {
     public List<Token> scan() {
         String[] lines = source.split("\n");
         for (int i = 0; i < lines.length; i++) {
-            tokens.addAll(scanLine(lines[i], i));
+            tokens.addAll(scanLine(removeWhitespace(lines[i]), i));
         }
         tokens.add(new Token(EOF, "", "", lines.length));
         return tokens;
+    }
+
+    private String removeWhitespace(String line){
+        return line.trim().replaceAll("\\s+", " ");
     }
 }

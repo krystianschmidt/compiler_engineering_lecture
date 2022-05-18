@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ParserTest {
     static final String program = """
             fun printSum(a,b) {
-            print a+b;
+                print a+b;
             }
             print 25+60;
             """;
