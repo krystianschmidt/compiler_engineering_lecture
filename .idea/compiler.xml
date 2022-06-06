@@ -7,9 +7,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Scanner" />
+        <module name="JLox-Scanner-Compilerbau" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="JLox-Scanner-Compilerbau" target="15" />
       <module name="Scanner" target="15" />
     </bytecodeTargetLevel>
   </component>

@@ -3,23 +3,17 @@ package com.thecout.lox.Traversal;
 
 import com.thecout.lox.Parser.Expr.*;
 import com.thecout.lox.Parser.Stmts.*;
-import com.thecout.lox.Token;
-import com.thecout.lox.TokenType;
 import com.thecout.lox.Traversal.InterpreterUtils.Environment;
 import com.thecout.lox.Traversal.InterpreterUtils.LoxCallable;
+import com.thecout.lox.Traversal.InterpreterUtils.LoxReturn;
 import com.thecout.lox.Traversal.InterpreterUtils.RuntimeError;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class Interpreter implements ExprVisitor<Object>,
-        StmtVisitor<Void> {
+public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
 
     public final Environment globals = new Environment();
     private Environment environment = globals;
-
-
 
 
     public Interpreter() {
@@ -52,8 +46,7 @@ public class Interpreter implements ExprVisitor<Object>,
         }
     }
 
-    public void executeBlock(List<Stmt> statements,
-                             Environment environment) {
+    public void executeBlock(List<Stmt> statements, Environment environment) {
         Environment previous = this.environment;
         try {
             this.environment = environment;
@@ -107,12 +100,18 @@ public class Interpreter implements ExprVisitor<Object>,
 
     @Override
     public Object visitUnaryExpr(Unary expr) {
-        return null;
+        Object right = evaluate(expr.right);
+
+        return switch (expr.operator.type) {
+            case BANG -> !(boolean) right;
+            case MINUS -> -(double) right;
+            default -> null;
+        };
     }
 
     @Override
     public Object visitVariableExpr(Variable expr) {
-        return null;
+        return environment.get(expr.name);
     }
 
     @Override
@@ -132,17 +131,29 @@ public class Interpreter implements ExprVisitor<Object>,
 
     @Override
     public Void visitIfStmt(If stmt) {
+        if((boolean) evaluate(stmt.condition))
+            execute(stmt.thenBranch);
+        else if(stmt.elseBranch != null)
+            execute(stmt.elseBranch);
+
         return null;
     }
 
     @Override
     public Void visitPrintStmt(Print stmt) {
+        System.out.println(stmt.expression.print());
+
         return null;
     }
 
     @Override
     public Void visitReturnStmt(Return stmt) {
-        return null;
+        Object value = null;
+
+        if(stmt.value != null)
+            value = evaluate(stmt.value);
+
+        throw new LoxReturn(value);
     }
 
     @Override
