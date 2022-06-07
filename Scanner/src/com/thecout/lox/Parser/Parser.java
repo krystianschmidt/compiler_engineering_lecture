@@ -189,6 +189,7 @@ public class Parser {
             consume(EQUAL, "equal expected");
             expr = assignment();
         }catch (Exception e){
+            name = null;
             current = idx;
             expr = or();
         };

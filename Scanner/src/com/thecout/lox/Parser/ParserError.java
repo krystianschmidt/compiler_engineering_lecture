@@ -9,6 +9,6 @@ public class ParserError extends Exception{
 
     ParserError(Token token, String message) {
         super(String.format("%d %s\n", token.line, message));
-        System.out.printf("%d %s\n", token.line, message);
+        //System.out.printf("%d %s\n", token.line, message);
     }
 }
