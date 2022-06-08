@@ -74,6 +74,7 @@ public class Parser {
             current = idx;
             try{
                 expressionStatement();
+                idx = current;
             }catch (Exception e2){
                 throw error(peek(), "Syntax error");
             };
@@ -81,6 +82,7 @@ public class Parser {
 
 
         expr = expression();
+        idx = current;
 
         consume(SEMICOLON, "semicolon expected");
 
@@ -314,18 +316,18 @@ public class Parser {
     }
 
     private Expr primary() throws ParserError {
-        if (match(TRUE)) return new Literal(advance().literal);
-        if (match(FALSE)) return new Literal(advance().literal);
-        if (match(NIL)) return new Literal(advance().literal);
+        if (check(TRUE)) return new Literal(advance().literal);
+        if (check(FALSE)) return new Literal(advance().literal);
+        if (check(NIL)) return new Literal(advance().literal);
         if (check(NUMBER)) return new Literal(advance().literal);
         if (check(STRING)) return new Literal(advance().literal);
         if (check(IDENTIFIER)) return new Variable(advance());
         if (match(LEFT_PAREN)) {
             Expr expr = expression();
-            consume(RIGHT_PAREN, "Right paren expected");
+            consume(RIGHT_PAREN, "Expected ')'");
             return expr;
         }
-        throw error(peek(), "Error");
+        throw error(peek(), "Syntax Error");
     }
 
     private boolean match(TokenType... types) {
